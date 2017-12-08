@@ -77,7 +77,7 @@ After getting the reset to work, we added a way to 'teleport' between levels, us
 				charCenterV <= 400;
 			end if;
 			
-We originally wanted to shift it horizontally and vertically, but for a currently unknow reason we encounted a bug if we didn't enter the location with the right movement, causing the character to only move vertically OR horizontally and not both. 
+We originally wanted to shift it horizontally and vertically, but for a currently unknow reason we encounted a bug if we didn't enter the location with the right movement, causing the character to only move vertically OR horizontally and not both. Having the teleport only be vertical worked fine, fixing the issue. 
 
 
 		
