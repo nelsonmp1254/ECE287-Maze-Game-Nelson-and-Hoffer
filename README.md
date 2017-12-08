@@ -21,10 +21,24 @@ Once we had the draw process running, we created variables to hold the position 
         
 With the chracter position being stored in two variables, we set up 4 inputs using the FPGA buttons. We made a move process that moved the position by 1 per cycle. The code for that; 
 
-	elsif (videoOn = '1' and InputUp = '0')  then
-			charcenterV <= charCenterV - 1;
-		end if;
-    
+	move:process(clk25, videoOn, InputLeft, InputRight, InputUp, InputDown, charCenterH, charCenterV)
+	begin 
+		if RST = '0' then
+		if(clk25'event and clk25 = '1')then
+		  if counter < "1111010111100001000000" then
+		  counter <= counter + 20;
+		  else
+			if (charCenterV >= 210 and charCenterV <=225 and charCenterH >= 610 and charCenterH <= 625) then
+				charCenterV <= 400;
+				charCenterH <= 400;
+	.
+	.
+	.
+			elsif (videoOn = '1' and InputUp = '0')  then
+				charcenterV <= charCenterV - 1;
+			end if;
+			
+
 We made sure that the character couldn't move if videoOn was off, as that would allow the character to move without displaying it. 
 
 With having a way to draw our character, move the character, and draw our boxes, we just had to set boundaries. In order to do so, we decided to have the move process check to make sure that our 'char' wasn't up against where we drew out line. Before allowing any movement, we put in an if statement that would check if it was within 6 pixels of a side of a wall. If it was, it didn't allow the character ot move in that direction, having no commands. The code was; 
@@ -32,3 +46,43 @@ With having a way to draw our character, move the character, and draw our boxes,
 	elsif (charCenterV = 245) then -- middle from bottom
 			--
       
+      
+ The videoOn variable was tied to our reset input, which was on a switch. We created a process for this. When reset = '1', we had it reset our character position to the starting point and turned the videoOn to '0', or off. 
+ 
+		video_on:process(clk25, RST, hPos, vPos)
+		begin
+			if(RST = '1')then
+				videoOn <= '0';
+			elsif(clk25'event and clk25 = '1')then
+				if(hPos <= HD and vPos <= VD)then
+					videoOn <= '1';
+				else
+					videoOn <= '0';
+				end if;
+			end if;
+		end process;
+		
+Then, in the moveChar process, we added an else statement for if RST was not = '1'; 
+
+	else 
+				CharcenterH <= 11;
+				CharcenterV <= 11;
+			end if;
+			
+which would reset the char position to the starting position. 
+
+After getting the reset to work, we added a way to 'teleport' between levels, using a similar statement; 
+
+	if (charCenterV >= 210 and charCenterV <=225 and charCenterH >= 610 and charCenterH <= 625) then
+				charCenterV <= 400;
+			end if;
+			
+We originally wanted to shift it horizontally and vertically, but for a currently unknow reason we encounted a bug if we didn't enter the location with the right movement, causing the character to only move vertically OR horizontally and not both. 
+
+
+		
+
+
+
+ 
+ 
